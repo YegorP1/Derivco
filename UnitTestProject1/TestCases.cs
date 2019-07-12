@@ -8,12 +8,11 @@ namespace UnitTestProject1
  
     public class TestCases
     {
+        //Instantiate clases by creating Objects
         BaseRestApi restApi = new BaseRestApi();
-        
         Company comp = new Company();
-
         Employee empl = new Employee();
-
+ 
         public string createToken()
         {
             var tokenResponse = restApi.GenerateToken();
@@ -32,19 +31,21 @@ namespace UnitTestProject1
             return companyId;
         }
 
-        //public string getEmployeeId()
-        //{
-        //    var response = restApi.GetRequest(createToken(), empl.baseUrl, empl.employeePath);
-        //    var content = response.Content;
-        //    string companyId = restApi.RetrieveId(content);
-        //    return companyId;
-        //}
+        public string getEmployeeId()
+        {
+            var response = restApi.GetAll(createToken(), empl.employeePath);
+            var content = response.Content;
+            string employeeId = restApi.RetrieveId(content);
+            return employeeId;
+        }
 
+        //Test flow 
+        //Company -> Create - GetAll - GetByID - Delete
 
         [TestMethod, Order(1)]
         public void CreateCompany()
         {
-            var companyResponse = comp.PostCompany();
+            var companyResponse = restApi.Post(createToken(), comp.companyPath, comp.companyName);
             var companyContent = companyResponse.Content;
             //Assert Response Status Code
             restApi.AssertStatusCode(companyResponse);
@@ -54,7 +55,7 @@ namespace UnitTestProject1
 
         public void GetAllCompanies()
         {
-            var allCompaniesResponse = comp.GetCompanies();
+            var allCompaniesResponse = restApi.GetAll(createToken(), comp.companyPath);
             var allCompaniesContent = allCompaniesResponse.Content;
             var compId = comp.RetrieveId(allCompaniesContent);
             //Validate the Response body content
@@ -63,24 +64,11 @@ namespace UnitTestProject1
             restApi.AssertStatusCode(allCompaniesResponse);
         }
 
-        //[TestMethod, Order(3)]
-
-        //public void GetSpecificCompanyById()
-        //{
-        //    var getCompanyResponse = comp.GetCompanyById();
-        //    var getCompanyContent = getCompanyResponse.Content;
-        //    //Validate the Response body content
-        //    Console.WriteLine(getCompanyContent);
-        //    //Assert Response Status Code
-        //    restApi.AssertStatusCode(getCompanyResponse);
-
-        //}
-
         [TestMethod, Order(3)]
 
-        public void NewGetSpecificCompanyById()
+        public void GetCompanyById()
         {
-            var getCompanyResponse = restApi.GetById(createToken(), comp.companyPath, getCompanyId());
+            var getCompanyResponse = restApi.GetById(createToken(), comp.companyIdPath, getCompanyId());
             var getCompanyContent = getCompanyResponse.Content;
             //Validate the Response body content
             Console.WriteLine(getCompanyContent);
@@ -89,59 +77,61 @@ namespace UnitTestProject1
 
         }
 
-        //[TestMethod, Order(4)]
-        //public void DeleteCompany()
-        //{
-        //    var deleteCompanyResponse = comp.Delete(getCompanyId());
-        //    var deleteCompanyContent = deleteCompanyResponse.Content;
+        [TestMethod, Order(4)]
+        public void DeleteCompany()
+        {
+            var deleteCompanyResponse = restApi.Delete(createToken(), comp.companyIdPath, getCompanyId());
+            var deleteCompanyContent = deleteCompanyResponse.Content;
 
-        //    //Assert Response Status Code
-        //    restApi.AssertStatusCode(deleteCompanyResponse);
-        //}
+            //Assert Response Status Code
+            restApi.AssertStatusCode(deleteCompanyResponse);
+        }
 
-        //[TestMethod, Order(5)]
-        //public void CreateEmployee()
-        //{
-        //    var postEmployeeResponse = restApi.PostRequest(createToken(), empl.baseUrl, empl.employeePath, empl.employeeName);
-        //    var postEmployeeContent = postEmployeeResponse.Content;
-        //    //Assert Response Status Code
-        //    restApi.AssertStatusCode(postEmployeeResponse);
-        //}
+        //Employee -> Create - GetAll - GetByID - Delete
 
-        //[TestMethod, Order(6)]
+        [TestMethod, Order(5)]
+        public void CreateEmployee()
+        {
+            var postEmployeeResponse = restApi.Post(createToken(), empl.employeePath, empl.employeeName);
+            var postEmployeeContent = postEmployeeResponse.Content;
+            //Assert Response Status Code
+            restApi.AssertStatusCode(postEmployeeResponse);
+        }
 
-        //public void GetAllEmployees()
-        //{
-        //    var allEmployeesResponse = restApi.GetRequest(createToken(), empl.baseUrl, empl.employeePath);
-        //    var allEmployeesContent = allEmployeesResponse.Content;
-        //    var compId = restApi.RetrieveId(allEmployeesContent);
+        [TestMethod, Order(6)]
 
-        //    Console.WriteLine(allEmployeesContent);
-        //    //Assert Response Status Code
-        //    restApi.AssertStatusCode(allEmployeesResponse);
-        //}
+        public void GetAllEmployees()
+        {
+            var allEmployeesResponse = restApi.GetAll(createToken(), empl.employeePath);
+            var allEmployeesContent = allEmployeesResponse.Content;
+            var compId = restApi.RetrieveId(allEmployeesContent);
 
-        //[TestMethod, Order(7)]
+            Console.WriteLine(allEmployeesContent);
+            //Assert Response Status Code
+            restApi.AssertStatusCode(allEmployeesResponse);
+        }
 
-        //public void GetEmployeeById()
-        //{
-        //    var getEmployeeResponse = restApi.GetById(empl.GenerateToken(), empl.employeeIdPath, getEmployeeId())
-        //    var getEmployeeContent = getEmployeeResponse.Content;
+        [TestMethod, Order(7)]
 
-        //    Console.WriteLine(getEmployeeContent);
-        //    //Assert Response Status Code
-        //    restApi.AssertStatusCode(getEmployeeResponse);
-        //}
+        public void GetEmployeeById()
+        {
+            var getEmployeeResponse = restApi.GetById(createToken(), empl.employeeIdPath, getEmployeeId());
+            var getEmployeeContent = getEmployeeResponse.Content;
 
-        //[TestMethod, Order(8)]
-        //public void DeleteEmployee()
-        //{
-        //    var deleteEmployeeResponse = restApi.DeleteRequest(createToken(), empl.baseUrl, empl.employeeIdPath, getEmployeeId());
-        //    var deleteEmployeeContent = deleteEmployeeResponse.Content;
+            Console.WriteLine(getEmployeeContent);
+            //Assert Response Status Code
+            restApi.AssertStatusCode(getEmployeeResponse);
+        }
 
-        //    //Assert Response Status Code
-        //    restApi.AssertStatusCode(deleteEmployeeResponse);
-        //}
+        [TestMethod, Order(8)]
+        public void DeleteEmployee()
+        {
+            var deleteEmployeeResponse = restApi.Delete(createToken(), empl.employeeIdPath, getEmployeeId());
+            var deleteEmployeeContent = deleteEmployeeResponse.Content;
+
+            //Assert Response Status Code
+            restApi.AssertStatusCode(deleteEmployeeResponse);
+        }
 
 
     }

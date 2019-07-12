@@ -16,8 +16,10 @@ namespace UnitTestProject1
         internal protected string baseUrl = "https://mobilewebserver9-pokertest8ext.installprogram.eu/TestApi";
         private string tokenBody = "grant_type=password&username=testName&password=test";
 
-        internal protected string contentType = "application/json";
-        internal protected string authorizationType = "Bearer ";
+        //Define Content type and Autorization values in variables 
+        private string contentType = "application/json";
+        private string authorizationType = "Bearer ";
+        
         //Genererate randon int for creation unique value in request body  
         public static int GetRandomNumber()
         {
@@ -69,6 +71,19 @@ namespace UnitTestProject1
             }
         }
 
+        //Create POST template request
+        public IRestResponse Post(string bearerToken, string path, string compName)
+        {
+            client = new RestClient(baseUrl);
+            request = new RestRequest(path, Method.POST);
+            request.AddHeader("Content-Type", contentType);
+            request.AddHeader("Authorization", authorizationType + bearerToken);
+            var body = new { Name = compName };
+            request.AddJsonBody(body);
+            return client.Execute(request);
+        }
+        
+        //Create GET ALL template request
         public IRestResponse GetAll(string bearerToken, string path)
         {
             client = new RestClient(baseUrl);
@@ -78,6 +93,7 @@ namespace UnitTestProject1
             return client.Execute(request);
         }
 
+        //Create GET BY Id template request
         public IRestResponse GetById(string bearerToken, string path, string id)
         {
             client = new RestClient(baseUrl);
@@ -87,5 +103,13 @@ namespace UnitTestProject1
             return client.Execute(request);
         }
 
+        //Create DELETE template request
+        public IRestResponse Delete(string bearerToken, string path, string id)
+        {
+            client = new RestClient(baseUrl);
+            request = new RestRequest(path + id, Method.DELETE);
+            request.AddHeader("Authorization", authorizationType + bearerToken);
+            return client.Execute(request);
+        }
     }
 }

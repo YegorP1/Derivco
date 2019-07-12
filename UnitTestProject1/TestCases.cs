@@ -45,8 +45,9 @@ namespace UnitTestProject1
         [TestMethod, Order(1)]
         public void CreateCompany()
         {
+            //Post request to Create a new Company using template from BaseRestApi class
             var companyResponse = restApi.Post(createToken(), comp.companyPath, comp.companyName);
-            var companyContent = companyResponse.Content;
+            
             //Assert Response Status Code
             restApi.AssertStatusCode(companyResponse);
         }
@@ -55,11 +56,15 @@ namespace UnitTestProject1
 
         public void GetAllCompanies()
         {
+            //Post request to Read all Companies data using template from BaseRestApi class
             var allCompaniesResponse = restApi.GetAll(createToken(), comp.companyPath);
+            
+            //Get Response body 
             var allCompaniesContent = allCompaniesResponse.Content;
-            var compId = comp.RetrieveId(allCompaniesContent);
-            //Validate the Response body content
-            Console.WriteLine(allCompaniesContent);
+            
+            //Validate the Response body has content
+            Console.WriteLine(allCompaniesContent);       
+            
             //Assert Response Status Code
             restApi.AssertStatusCode(allCompaniesResponse);
         }
@@ -68,10 +73,15 @@ namespace UnitTestProject1
 
         public void GetCompanyById()
         {
+            //GET request to read Company details by Id using template from BaseRestApi class
             var getCompanyResponse = restApi.GetById(createToken(), comp.companyIdPath, getCompanyId());
+            
+            //Get Response body 
             var getCompanyContent = getCompanyResponse.Content;
+            
             //Validate the Response body content
             Console.WriteLine(getCompanyContent);
+            
             //Assert Response Status Code
             restApi.AssertStatusCode(getCompanyResponse);
 
@@ -80,9 +90,9 @@ namespace UnitTestProject1
         [TestMethod, Order(4)]
         public void DeleteCompany()
         {
+            //Delete company by Id using template from BaseRestApi class
             var deleteCompanyResponse = restApi.Delete(createToken(), comp.companyIdPath, getCompanyId());
-            var deleteCompanyContent = deleteCompanyResponse.Content;
-
+            
             //Assert Response Status Code
             restApi.AssertStatusCode(deleteCompanyResponse);
         }
@@ -93,7 +103,7 @@ namespace UnitTestProject1
         public void CreateEmployee()
         {
             var postEmployeeResponse = restApi.Post(createToken(), empl.employeePath, empl.employeeName);
-            var postEmployeeContent = postEmployeeResponse.Content;
+            
             //Assert Response Status Code
             restApi.AssertStatusCode(postEmployeeResponse);
         }
@@ -104,8 +114,8 @@ namespace UnitTestProject1
         {
             var allEmployeesResponse = restApi.GetAll(createToken(), empl.employeePath);
             var allEmployeesContent = allEmployeesResponse.Content;
-            var compId = restApi.RetrieveId(allEmployeesContent);
-
+            
+            //Validate the Response body content
             Console.WriteLine(allEmployeesContent);
             //Assert Response Status Code
             restApi.AssertStatusCode(allEmployeesResponse);
@@ -117,7 +127,8 @@ namespace UnitTestProject1
         {
             var getEmployeeResponse = restApi.GetById(createToken(), empl.employeeIdPath, getEmployeeId());
             var getEmployeeContent = getEmployeeResponse.Content;
-
+            
+            //Validate the Response body content
             Console.WriteLine(getEmployeeContent);
             //Assert Response Status Code
             restApi.AssertStatusCode(getEmployeeResponse);
@@ -127,12 +138,9 @@ namespace UnitTestProject1
         public void DeleteEmployee()
         {
             var deleteEmployeeResponse = restApi.Delete(createToken(), empl.employeeIdPath, getEmployeeId());
-            var deleteEmployeeContent = deleteEmployeeResponse.Content;
-
+          
             //Assert Response Status Code
             restApi.AssertStatusCode(deleteEmployeeResponse);
         }
-
-
     }
 }
